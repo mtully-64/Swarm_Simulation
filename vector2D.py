@@ -53,11 +53,11 @@ class vector2D:
 
     def magnitude(self):
         """Returns the length of the vector as a float"""
-        return math.sqrt(self.x**2+self.y**2)
+        return math.sqrt(self.x**2 + self.y**2)
 
     def magnitude_sq(self):
         """Returns the squared length"""
-        return (self.x**2+self.y**2)    # This prevents the expensive square root done in the magnitude function
+        return (self.x**2 + self.y**2)    # This prevents the expensive square root done in the magnitude function
 
     def normalize(self):
         """
@@ -72,7 +72,7 @@ class vector2D:
         # Else, if the magnitude is not 0
         else:
             # Return new vector with a magnitude of 1, while keeping it in the same direction
-            return vector2D(self.x/self.magnitude(), self.y/self.magnitude())
+            return vector2D(self.x / self.magnitude(), self.y / self.magnitude())
         
     def limit(self, ceiling):
         """Returns a copy of the vector, with its magnitude within a ceiling"""
@@ -80,13 +80,16 @@ class vector2D:
         # If the magnitude is greater then the ceiling
         if self.magnitude() > ceiling:
             # Clamp the magnitude to the ceiling
-            pass
+            # Therefore, take the normalised vector to keep direction and a magnitude of 1, and multiply it by the ceiling
+            return self.normalize()*ceiling
         # If the magnitude is already shorter then the ceiling, return the unchanged copy
         else: 
             return vector2D(self.x, self.y)
 
     def distance_to(self, other):
         """Returns the Euclidean distance between two vectors"""
+        return math.sqrt((self.x - other.x)**2 + (self.y - other.y)**2)
 
     def distance_sq_to(self, other):
         """Returns the squared distance"""
+        return (self.x - other.x)**2 + (self.y - other.y)**2
