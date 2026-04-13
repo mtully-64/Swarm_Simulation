@@ -1,4 +1,5 @@
 import math
+import random
 
 class vector2D:
     """
@@ -93,3 +94,74 @@ class vector2D:
     def distance_sq_to(self, other):
         """Returns the squared distance"""
         return (self.x - other.x)**2 + (self.y - other.y)**2
+    
+    # The simulation world wraps around on itself, like Pac-Man
+    # This means that if an agent walks off the right side of the map, then it appears on the left
+    # This is called a "toroidal" world
+    def wrapped_offset(self, other, width, height):
+        """
+        Returns a new vector
+        Representing the shortest path from self to other, on a toroidal surface of the given width and height
+
+        E.g. if the world is a width of 1000 pixels, an object is at x=950 (near right edge) and its neighbour is at x=50 (near left edge)
+        Then the naive distance is 950-50=900px apart, but since the world wraps around, they're actually only 100 pixels apart
+
+        For each axis, if the raw difference is more then half the world size, then subtract the world size
+        If less than negative half, add the world size
+        """
+        
+        dx = other.x - self.x # The difference in x
+        dy = other.y - self.y # The difference in y
+
+        ####################
+        # Difference in x
+        ####################
+
+        # If the difference is bigger than half the world size,
+        # The short path is the other way
+        if dx > (0.5*width):
+            dx = dx - width
+        # If the difference is less than negative half the world size,
+        # Add the world size
+        elif dx < ((-width)*0.5):
+            dx = dx + width
+
+        ####################
+        # Difference in y
+        ####################
+
+        if dy > (0.5*height):
+            dy = dy - height
+        elif dy < ((-height)*0.5):
+            dy = dy + height
+
+        # Now return a vector2D with those dx and dy values
+        return vector2D(dx, dy)
+    
+    ####################
+    # Static Methods
+    ####################
+
+    # These methods will create and return brand new vector2D instances
+    # Hence these will be static methods
+    
+    @staticmethod
+    def random_position(x_max:float, y_max:float):
+        """Returns a vector with random x value and random y value"""
+        x = random.uniform(0, x_max) # uniform is randint for floats instead of integers
+        y = random.uniform(0, y_max)
+
+        return vector2D(x, y)
+        
+    @staticmethod
+    def random_unit():
+        """Returns a vector of length 1 pointing in a random direction"""
+        # Calculate a random angle, where angle is random from [0, 2*pi]
+        max_value = 2*math.pi
+        angle = random.uniform(0, max_value)
+
+        x = math.cos(angle)
+        y = math.sin(angle)
+
+        # Return vector now with the random direction and length will be 1
+        return vector2D(x, y)
