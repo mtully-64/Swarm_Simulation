@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 from vector2D import vector2D
+from config import SimulationConfig
 
 class BaseAgent(ABC):
     """
@@ -15,13 +16,13 @@ class BaseAgent(ABC):
         self.perception_radius = perception_radius # how far the agent can see
 
     @abstractmethod
-    def compute_steering(self, config, grid):
+    def compute_steering(self, config: SimulationConfig, grid):
         """
         This is where subclasses outline their own steering behaviours
         """
         pass
 
-    def update(self, config, grid):
+    def update(self, config: SimulationConfig, grid):
         """
         This method is called once per tick
         It executes four steps in a specific order
