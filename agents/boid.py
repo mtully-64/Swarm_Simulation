@@ -15,37 +15,9 @@ class Boid(BaseAgent):
         )
         self.alive = True
 
-    def compute_steering(self, config: SimulationConfig, grid):
-        """
-        Method will override the base agent class, and implement five local steering behaviours:
-            1. Spatial hash grid to get nearby candidates
-            2. For each candidate, the "wrapped_offset" is computed and the distance. Then classify it as a neighbour, predator or a food source
-            3. Call each of five behaviour methods
-            4. Multiply each result by its corresponding weight (found in config.py)
-            5. Apply each weighted force
-        """
-        neighbours = []
-        predators = []
-        foods = []
-
-        for agent in grid:
-            if isinstance(agent, Boid) and agent is not self and agent.alive:
-                neighbours.append(agent)
-            elif isinstance(agent, Predator):
-                predators.append(agent)
-            elif isinstance(agent, Food):
-                foods.append(agent)
-
-        # Call each of the methods, multiplied by its weight set in the config
-        self.apply_force(self._separation(neighbours, config) * config.separation_weight)
-        self.apply_force(self._alignment(neighbours) * config.alignment_weight)
-        self.apply_force(self._cohesion(neighbours, config) * config.cohesion_weight)
-        self.apply_force(self._flee(predators, config)*config.flee_weight)
-        self.apply_force(self._seek_food(foods, config) * config.seek_food_weight)
-    
-    #############################
-    # Behaviour Methods
-    #############################
+    ###########################################
+    # Private Methods - Behaviour Methods
+    ###########################################
     
     # For boids that are too close, still keep a buffer zone
     def _separation(self, neighbours, config: SimulationConfig):
@@ -181,3 +153,36 @@ class Boid(BaseAgent):
             return self.steer_towards(nearest_food)
         else:
             return vector2D(0, 0)
+        
+    ###########################################
+    # Public Methods
+    ###########################################
+
+    def compute_steering(self, config: SimulationConfig, grid):
+        """
+        Method will override the base agent class, and implement five local steering behaviours:
+            1. Spatial hash grid to get nearby candidates
+            2. For each candidate, the "wrapped_offset" is computed and the distance. Then classify it as a neighbour, predator or a food source
+            3. Call each of five behaviour methods
+            4. Multiply each result by its corresponding weight (found in config.py)
+            5. Apply each weighted force
+        """
+        neighbours = []
+        predators = []
+        foods = []
+
+        for agent in grid:
+            if isinstance(agent, Boid) and agent is not self and agent.alive:
+                neighbours.append(agent)
+            elif isinstance(agent, Predator):
+                predators.append(agent)
+            elif isinstance(agent, Food):
+                foods.append(agent)
+
+        # Call each of the methods, multiplied by its weight set in the config
+        self.apply_force(self._separation(neighbours, config) * config.separation_weight)
+        self.apply_force(self._alignment(neighbours) * config.alignment_weight)
+        self.apply_force(self._cohesion(neighbours, config) * config.cohesion_weight)
+        self.apply_force(self._flee(predators, config)*config.flee_weight)
+        self.apply_force(self._seek_food(foods, config) * config.seek_food_weight)
+    
