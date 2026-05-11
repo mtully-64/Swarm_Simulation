@@ -22,7 +22,7 @@ class Food(BaseAgent):
     ####################################
 
     def consume(self):
-        "Once food is consumed, turn it to inactive and record the timestamp of its consumption"
+        """Once food is consumed, turn it to inactive and record the timestamp of its consumption"""
         self.active = False
         self._eaten_timestamp = time.time()
 

@@ -57,6 +57,7 @@ class SpatialHash:
         # List of agents that potentially overlap
         overlap_agents = list()
 
+        # Find the centre cell and its spanning radius
         centre_col = int(x // self.cell_size) % self.cols
         centre_row = int(y // self.cell_size) % self.rows
         radius_span = (int(radius // self.cell_size) + 1)
@@ -72,7 +73,7 @@ class SpatialHash:
                 # Therefore delta_col and delta_row are the offets from the centre cell
                 col = (centre_col + delta_col) % self.cols # the modulo is to do the torodial wrapping again
                 row = (centre_row + delta_row) % self.rows
-                
+
                 # Grab any agents in that cell and add them to the list of overlapping
                 overlap_agents.extend(self._cells.get((col, row), []))
 
