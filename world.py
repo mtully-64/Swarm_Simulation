@@ -127,7 +127,7 @@ class World:
             - 'food' a list of to_dict() for all food sources
             - 'stats' a dict with fps, tick, alive_boids, and total_kills
         """
-
+        # Simulation stats
         stats = {"fps": round(self._FPS, 1), "tick": self.tick_counter, "alive_boids": sum(1 for b in self.boids if b.alive), "total_kills": sum(p.kills for p in self.predators)}
 
         snapshot = {
@@ -137,4 +137,5 @@ class World:
             "stats": stats
         }
 
+        # Return the dict of world state
         return snapshot
